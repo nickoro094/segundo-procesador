@@ -133,7 +133,7 @@ COMPONENT nextProgramCounter
 		);
 END COMPONENT;
 
-signal NPCtoPC, NPCtoADDER,ADDERtoNPC, PCtoIM, auxIM, auxALURESULT, auxCRS1, auxCRS2, auxIMM, MUXtoALU : STD_LOGIC_VECTOR(31 DOWNTO 0) := x"00000000";
+signal NPCtoPC, NPCtoADDER,ADDERtoNPC, PCtoIM, auxALURESULT, auxCRS1, auxCRS2, auxIMM, auxIMM2, MUXtoALU : STD_LOGIC_VECTOR(31 DOWNTO 0) := x"00000000";
 
 signal auxCARRY: STD_LOGIC;
 signal auxCWP, auxNCWP: STD_LOGIC := '0';
@@ -152,15 +152,15 @@ Inst_ALU: ALU PORT MAP(
 	);
 
 Inst_CU: CU PORT MAP(
-		Op => auxIM(31 DOWNTO 30),
-		Op3 => auxIM(24 DOWNTO 19),
+		Op => auxIMM(31 DOWNTO 30),
+		Op3 => auxIMM(24 DOWNTO 19),
 		Aluop => auxALUOP
 	);
 
 Inst_Multiplexor: Multiplexor PORT MAP(
 		In1 => auxCRS2,
-		In2 => auxIMM,
-		Sc => auxIM(13),
+		In2 => auxIMM2,
+		Sc => auxIMM(13),
 		Sout => MUXtoALU
 	);
 	
@@ -203,8 +203,8 @@ Inst_RegisterFile: RegisterFile PORT MAP(
 	);
 
 Inst_SEU: SEU PORT MAP(
-		Imm => auxIM(12 DOWNTO 0),
-		Sout => auxIMM
+		Imm => auxIMM(12 DOWNTO 0),
+		Sout => auxIMM2
 	);
 
 Inst_Sumador: Sumador PORT MAP(
@@ -240,6 +240,8 @@ Inst_nextProgramCounter: nextProgramCounter PORT MAP(
 		Reset => ResetP,
 		outAddress => NPCtoPC
 	);
+	
+ResultP <= auxALURESULT;
 
 
 end arq_segundoProcesador;
