@@ -1,22 +1,3 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    07:40:32 10/19/2016 
--- Design Name: 
--- Module Name:    PSR_Modifier - Behavioral 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -39,9 +20,56 @@ entity PSR_Modifier is
 end PSR_Modifier;
 
 architecture Behavioral of PSR_Modifier is
-
-begin
 	
+begin
+	process (Reset, Aluop, ALuresult, crs1, crs2)
+		begin
+			if Reset = '1' then 
+				NZVC <= "0000";
+			
+			else	
+				--Logicas
+				if Aluop = "001000" or Aluop = "001001" or Aluop = "001010" or ALuop = "001011" or Aluop = "001100" or ALuop = "001101" then 
+					NZVC(3) <= Aluresult(31);
+					if Aluresult = "00000000000000000000000000000000" then 
+						NZVC(2) <= '1';
+					else
+						NZVC(2) <= '0';
+					end if;
+					NZVC(1) <= '0';
+					NZVC(0) <= '0';
+				end if;
+				
+			
+				--Aritmeticas
+				
+				
+				--Add
+				if ALuop = "001110" or Aluop = "010000" then
+					NZVC(3) <= Aluresult(31);
+					if Aluresult = "00000000000000000000000000000000" then 
+						NZVC(2) <= '1';
+					else
+						NZVC(2) <= '0';
+					end if;
+					NZVC(1) <= (crs1 and crs2 and (not ALuresult(31))) or ((not crs1) and (not crs2) and Aluresult(31));
+					NZVC(0) <= (crs1 and crs2) or ((not ALuresult(31)) and (crs1 or crs2));
+				end if;
+						
+						--Sub
+				if ALuop = "010001" or Aluop = "010011" then
+					NZVC(3) <= Aluresult(31);
+					if Aluresult = "00000000000000000000000000000000" then 
+						NZVC(2) <= '1';
+					else
+						NZVC(2) <= '0';
+					end if;
+					NZVC(1) <= (crs1 and (not crs2) and (not ALuresult(31))) or ((not crs1) and crs2 and Aluresult(31));
+					NZVC(0) <= ((not crs1) and crs2) or (ALuresult(31) and ((not crs1) or crs2));
+				end if;
+				
+			end if;
+	end process;
 						
 			
 end Behavioral;
