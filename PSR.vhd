@@ -1,22 +1,3 @@
-----------------------------------------------------------------------------------
--- Company: 
--- Engineer: 
--- 
--- Create Date:    12:22:21 10/19/2016 
--- Design Name: 
--- Module Name:    PSR - arq_PSR 
--- Project Name: 
--- Target Devices: 
--- Tool versions: 
--- Description: 
---
--- Dependencies: 
---
--- Revision: 
--- Revision 0.01 - File Created
--- Additional Comments: 
---
-----------------------------------------------------------------------------------
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 
@@ -41,9 +22,17 @@ end PSR;
 architecture arq_PSR of PSR is
 
 begin
-	
-	
-				
+	process(Reset, clk, ncwp, NZVC)
+		begin
+			if (Reset = '1') then 
+				cwp <= '0';
+				Carry <= '0';
+			elsif (rising_edge(clk)) then
+				cwp <= ncwp;
+				Carry <= NZVC(0);
 
+		end if;
+	end process;
+	
 end arq_PSR;
 
